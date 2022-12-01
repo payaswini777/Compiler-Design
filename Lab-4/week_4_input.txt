@@ -1,0 +1,9 @@
+#include<stdio.h>
+
+a=6;
+void main()
+{
+	int b=10;
+	int c=2;
+	printf("%d",(a+b)/c);
+}
