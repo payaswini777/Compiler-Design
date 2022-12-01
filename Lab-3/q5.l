@@ -6,8 +6,8 @@
 %}
 
 %%
-[01]000[01]  {printf("accepted");}
-[01][10|11] {printf("rejected");}
+[01]*000*[01]*  {printf("accepted");}
+[01]*[10|11]* {printf("rejected");}
 stop {return 0;}
 %%
 yywrap(){};
