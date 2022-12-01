@@ -1,69 +1,83 @@
 #include<stdio.h>
-#include<ctype.h>
-void FIRST(char*,char);
-void addToArray(char*,char);
-void printArray(char*);
+#include<conio.h>
+#include<stdlib.h>
+#include<string.h>
+int i=0,top=0;
+char stack[20],ip[20];
+void push(char c)
+{
+if (top>=20)
+printf("Stack Overflow");
+else
+stack[top++]=c;
+
+}
+
+void pop(void)
+{
+if(top<0)
+printf("Stack underflow");
+else
+top--;
+
+}
+void error(void)
+{
+printf("\n\nSyntax Error!!!! String is invalid\n");
+exit(0);
+}
+int main()
+{
 int n;
-char production[20][20];
-int main() {
-int i,j=0,k,foundNt=0;
-char c,result[20],nt[20];
-nt[0]='\0';
-printf("Enter number of productions :");
-scanf(" %d",&n);
-for(i=0;i<n;i++) {
-printf("Enter productions Number %d : ",i+1);
-scanf(" %s",production[i]);
-addToArray(nt,production[i][0]);
+printf("The given grammar is\n\n");
+printf("S -> aBa\n");
+printf("B -> bB | epsilon \n\n");
+printf("Enter the string to be parsed:\n");
+scanf("%s",ip);
+
+n=strlen(ip);
+ip[n]='$';
+ip[n+1]='\0';
+push('$');
+push('S');
+while(ip[i]!='\0')
+{ if(ip[i]=='$' && stack[top-1]=='$')
+{
+printf("\n\n Successful parsing of string \n");
+return 1;
 }
-for(k=0;nt[k]!='\0';k++) {
-c=nt[k];
-FIRST(result,c);
-printf("\n FIRST(%c)= { ",c);
-printArray(result);
-printf("}\n");
-}
-}
-void FIRST(char* Result,char c) {
-int i,j,k;
-char subResult[20];
-int foundEpsilon;
-subResult[0]='\0';
-Result[0]='\0';
-if(!(isupper(c)))
-addToArray(Result,c);
 else
-for(i=0;i<n;i++) {
-if(production[i][0]==c) {
-if(production[i][2]=='^')
-addToArray(Result,'^');
-else {
-for(j=2;production[i][j]!='\0';j++) {
-foundEpsilon=0;
-FIRST(subResult,production[i][j]);
-for(k=0;subResult[k]!='\0';k++)
-if(subResult[k]=='^')
-foundEpsilon=1;
+if(ip[i]==stack[top-1])
+{
+printf("\nmatch of %c ",ip[i]);
+i++;pop();
+}
 else
-addToArray(Result,subResult[k]);
-if(!foundEpsilon)
-break;
+{
+if(stack[top-1]=='S' && ip[i]=='a')
+{
+printf(" \n S ->aBa");
+pop();
+push('a');
+push('B');
+push('a');
+
+}
+else
+if(stack[top-1]=='B' && ip[i]=='b')
+
+{
+printf("\n B ->bB");
+pop();push('B');push('b');
+}
+else
+if(stack[top-1]=='B' && ip[i]=='a')
+{
+printf("\n B -> epsilon");
+pop();
+}
+else
+error();
 }
 }
-}
-}
-return ;
-}
-void addToArray(char *Result,char val) {
-int k;
-for(k=0 ;Result[k]!='\0';k++)
-if(Result[k]==val)
-return;
-Result[k]=val;
-Result[k+1]='\0';
-}
-void printArray(char *a) {
-int i=0;
-for(i=0;a[i]!='\0';i++)
-printf(" %c ",a[i]);
 }
